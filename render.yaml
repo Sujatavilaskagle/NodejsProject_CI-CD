@@ -11,4 +11,4 @@ services:
         generateValue: true
       - key: PORT
         value: 5000
-    buildCommand: npm ci
+    buildCommand: npm install
