@@ -1,8 +1,10 @@
 name: Test and Deploy
 
 on:
+  pull_request:
+    branches: [main, develop]
   push:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   test:
@@ -31,6 +33,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
       - name: Checkout code
