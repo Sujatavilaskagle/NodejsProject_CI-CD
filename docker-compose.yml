@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  app-develop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nodejs-app-develop
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - JWT_SECRET=dev_secret_key_change_in_production
+      - CORS_ORIGIN=http://localhost:3000,http://localhost:5173
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  app-uat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nodejs-app-uat
+    ports:
+      - "5001:5000"
+    environment:
+      - NODE_ENV=uat
+      - PORT=5000
+      - JWT_SECRET=uat_secret_key_change_in_production
+      - CORS_ORIGIN=http://localhost:3001,http://uat-frontend:3000
+    networks:
+      - app-network
+    restart: unless-stopped
+    profiles:
+      - uat
+
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nodejs-app-prod
+    ports:
+      - "5002:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - JWT_SECRET=prod_secret_key_change_in_production
+      - CORS_ORIGIN=https://your-react-app-url.vercel.app
+    networks:
+      - app-network
+    restart: unless-stopped
+    profiles:
+      - prod
+
+networks:
+  app-network:
+    driver: bridge
