@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const users = [];
-
+// Register a new user
 const register = (req, res) => {
   try {
     const { email, password } = req.body;
@@ -20,7 +20,7 @@ const register = (req, res) => {
     const user = { id: Date.now().toString(), email, password: hashedPassword };
     users.push(user);
 
-    res.status(201).json({ message: 'User registered successfully', userId: user.id, email: user.email });
+    res.status(201).json({ message: 'User registered successfully', data:user });
   } catch (err) {
     res.status(500).json({ error: 'Registration failed' });
   }
