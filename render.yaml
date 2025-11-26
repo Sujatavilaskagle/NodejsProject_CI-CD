@@ -1,14 +1,14 @@
-services:
-  - type: web
-    name: nodejs-login-app
-    env: node
-    plan: free
-    startCommand: npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: JWT_SECRET
-        generateValue: true
-      - key: PORT
-        value: 5000
-    buildCommand: npm install
+# services:
+#   - type: web
+#     name: nodejs-login-app
+#     env: node
+#     plan: free
+#     startCommand: npm start
+#     envVars:
+#       - key: NODE_ENV
+#         value: production
+#       - key: JWT_SECRET
+#         generateValue: true
+#       - key: PORT
+#         value: 5000
+#     buildCommand: npm install
