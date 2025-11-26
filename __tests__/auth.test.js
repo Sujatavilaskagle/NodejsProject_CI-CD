@@ -107,6 +107,110 @@ describe('Auth Routes', () => {
     });
   });
 
+  describe('GET /api/auth/users/:id', () => {
+    let userId;
+
+    beforeEach(async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'getuser@test.com',
+          password: 'password123'
+        });
+      userId = res.body.userId;
+    });
+
+    it('should get user by id', async () => {
+      const res = await request(app)
+        .get(`/api/auth/users/${userId}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.userId).toBe(userId);
+      expect(res.body.email).toBe('getuser@test.com');
+    });
+
+    it('should fail if user not found', async () => {
+      const res = await request(app)
+        .get('/api/auth/users/999999');
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toBe('User not found');
+    });
+
+    it('should fail if id not provided', async () => {
+      const res = await request(app)
+        .get('/api/auth/users/');
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  describe('PUT /api/auth/users/:id', () => {
+    let userId;
+
+    beforeEach(async () => {
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'updateuser@test.com',
+          password: 'password123'
+        });
+      userId = res.body.userId;
+    });
+
+    it('should update user email', async () => {
+      const res = await request(app)
+        .put(`/api/auth/users/${userId}`)
+        .send({
+          email: 'newemail@test.com'
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toBe('User updated successfully');
+      expect(res.body.email).toBe('newemail@test.com');
+    });
+
+    it('should update user password', async () => {
+      const res = await request(app)
+        .put(`/api/auth/users/${userId}`)
+        .send({
+          password: 'newpassword123'
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toBe('User updated successfully');
+    });
+
+    it('should fail if user not found', async () => {
+      const res = await request(app)
+        .put('/api/auth/users/999999')
+        .send({
+          email: 'test@test.com'
+        });
+
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toBe('User not found');
+    });
+
+    it('should fail if email already in use', async () => {
+      const user2Res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'another@test.com',
+          password: 'password123'
+        });
+
+      const res = await request(app)
+        .put(`/api/auth/users/${userId}`)
+        .send({
+          email: 'another@test.com'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toBe('Email already in use');
+    });
+  });
+
   describe('GET /health', () => {
     it('should return health status', async () => {
       const res = await request(app)
