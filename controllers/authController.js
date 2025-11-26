@@ -54,6 +54,7 @@ const login = (req, res) => {
   }
 };
 
+// Get a specific user by ID
 const getUserById = (req, res) => {
   try {
     const { id } = req.params;
