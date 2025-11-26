@@ -20,7 +20,7 @@ const register = (req, res) => {
     const user = { id: Date.now().toString(), email, password: hashedPassword };
     users.push(user);
 
-    res.status(201).json({ message: 'User registered successfully', data:user });
+    res.status(201).json({ message: 'User registered successfully', userId: user.id, email: user.email });
   } catch (err) {
     res.status(500).json({ error: 'Registration failed' });
   }
